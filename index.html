@@ -1,22 +1,76 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+  </head>
 
-<head>
-	<title>Parcel Sandbox</title>
-	<meta charset="UTF-8" />
-</head>
+  <body>
+    <p>
+      目黒株式会社は、設立にあたって発行株式総数1,000株のうち300株を1株あたり4,000円で発行することとし、全株について引受け・払い込みを受け、払込金については普通預金に入金した。なお、資本金は会社法で認められている最低限度額を計上することとした。また、発起人が株式発行に係る諸経費50,000円を立て替え払いしていたことが判明したので、現金で精算した。
+    </p>
+    <form action="#" id="answer">
+      <p>
+        <select id="dr-ac-1"></select>
+        <input type="text" name="name" />
+        <select id="cr-ac-1"></select>
+        <input type="text" name="name" />
+      </p>
+      <p>
+        <select id="dr-ac-2"></select>
+        <input type="text" name="name" />
+        <select id="cr-ac-2"></select>
+        <input type="text" name="name" />
+      </p>
+      <p>
+        <select id="dr-ac-3"></select>
+        <input type="text" name="name" />
+        <select id="cr-ac-3"></select>
+        <input type="text" name="name" />
+      </p>
+      <p><input type="submit" value="確認する" id="button2" /></p>
+    </form>
+    <script>
+      const accountsList = [
+        "現金",
+        "普通預金",
+        "資本金",
+        "資本準備金",
+        "利益準備金",
+        "創立費",
+        "株式交付費",
+      ];
 
-<body>
+      // 勘定科目選択をセット
+      setAccounts("dr-ac-1", accountsList);
+      setAccounts("cr-ac-1", accountsList);
+      setAccounts("dr-ac-2", accountsList);
+      setAccounts("cr-ac-2", accountsList);
+      setAccounts("dr-ac-3", accountsList);
+      setAccounts("cr-ac-3", accountsList);
 
-<form action="#" id="answer">
-<select id="karikata">
-</select>
-	<input type="text" name="name">
-	<p><input type="submit" value="確認する" id="button2"></p>
-</form>
-	<div id="app"></div>
-	<script src="src/index.js">
-	</script>
-</body>
+      /**
+       * アンサーチェック
+       */
+      document.getElementById("answer").onsubmit = function () {
+        console.log("dr-ac-1 is " + document.getElementById("dr-ac-1").value);
+        console.log("cr-ac-1 is " + document.getElementById("cr-ac-1").value);
+      };
 
+      /**
+       * セレクトボックスの中身を設定
+       * name = id , accountsList = 勘定科目のリスト
+       * @param {number} duration スクロール時間のミリ秒です。
+       */
+      function setAccounts(name, accountsList) {
+        for (let i = -1; i < accountsList.length; i++) {
+          const option = document.createElement("option");
+          const accountName = i < 0 ? "" : accountsList[i];
+          option.setAttribute("value", accountName);
+          option.innerHTML = accountName;
+          document.getElementById(name).appendChild(option);
+        }
+      }
+    </script>
+  </body>
 </html>
