@@ -6,10 +6,12 @@
     <script>
       //エンターキーでフォーカスを変える
       function keydown(e) {
-        if (e.keyCode === 13) {
-          var obj = document.activeElement;
-          obj.nextElementSibling.focus();
-        }
+        try {
+          if (e.keyCode === 13) {
+            var obj = document.activeElement;
+            obj.nextElementSibling.focus();
+          }
+        } catch (e) {}
       }
       window.onkeydown = keydown;
     </script>
@@ -18,7 +20,28 @@
   <body>
     <!-- 問題文 -->
     <p id="question"></p>
-    <form action="#" id="answer">
+
+    <table
+      border="1"
+      width="100%"
+      style="table-layout: fixed"
+      id="answer-table"
+    >
+      <tr>
+        <th bgcolor="#EE0000"><font color="#FFFFFF">借方勘定項目</font></th>
+        <th bgcolor="#EE0000"><font color="#FFFFFF">金額</font></th>
+        <th bgcolor="#EE0000"><font color="#FFFFFF">貸方勘定項目</font></th>
+        <th bgcolor="#EE0000"><font color="#FFFFFF">金額</font></th>
+      </tr>
+      <tr>
+        <th id="a-dr-ac"></th>
+        <th id="a-dr-amt"></th>
+        <th id="a-cr-ac"></th>
+        <th id="a-cr-amt"></th>
+      </tr>
+    </table>
+
+    <form action="#" id="answer" autocomplete="off" onsubmit="return false;">
       <p>
         <select id="dr-ac-1"></select>
         <input
@@ -67,7 +90,7 @@
           onblur="toComma(this);"
         />
       </p>
-      <p><input type="submit" value="確認する" id="button2" /></p>
+      <p><input type="button" value="確認する" onClick="ansButton();" /></p>
     </form>
     <script>
       // 問題のリスト
@@ -106,6 +129,7 @@
 
       // 問題を表示
       function setCurrentQuestion(current) {
+        document.getElementById("answer-table").style.display = "none";
         // 問題文を表示
         document.getElementById("question").innerHTML = current.q;
         // 勘定科目選択をセット
@@ -120,26 +144,45 @@
       /**
        * アンサーチェック
        */
-      document.getElementById("answer").onsubmit = function () {
+      //document.getElementById("answer").onsubmit = function () {
+      function ansButton() {
         let correct = true;
         const drList = getAnswerList("dr");
         correct = checkAnswerList(drList, currentQuestion.dr);
         // console.log("testcorrect " + testcorrect);
         const crList = getAnswerList("cr");
         correct = checkAnswerList(crList, currentQuestion.cr);
-        // const drAnsList = currentQuestion.dr;
-        // const crAnsList = currentQuestion.cr;
-        // console.log(drAnsList);
-        // console.log("drList.length " + drList.length);
-        // console.log("drAnsList.length " + drAnsList.length);
-        // console.log(crAnsList);
 
         if (correct) {
           console.log("正解");
         } else {
           console.log("不正解");
+          viewAnswer();
         }
-      };
+      }
+
+      function viewAnswer() {
+        const dr = currentQuestion.dr;
+        let drAc = dr[0][0];
+        if (dr.length > 1) drAc += "<br />" + dr[1][0];
+        if (dr.length > 2) drAc += "<br />" + dr[2][0];
+        let drAmt = dr[0][1];
+        if (dr.length > 1) drAmt += "<br />" + dr[1][1];
+        if (dr.length > 2) drAmt += "<br />" + dr[2][1];
+        const cr = currentQuestion.cr;
+        let crAc = cr[0][0];
+        if (cr.length > 1) crAc += "<br />" + cr[1][0];
+        if (cr.length > 2) crAc += "<br />" + cr[2][0];
+        let crAmt = cr[0][1];
+        if (cr.length > 1) crAmt += "<br />" + cr[1][1];
+        if (cr.length > 2) crAmt += "<br />" + cr[2][1];
+
+        document.getElementById("a-dr-ac").innerHTML = drAc;
+        document.getElementById("a-dr-amt").innerHTML = drAmt;
+        document.getElementById("a-cr-ac").innerHTML = crAc;
+        document.getElementById("a-cr-amt").innerHTML = crAmt;
+        document.getElementById("answer-table").style.display = "";
+      }
 
       // 貸方または借方の答えリストが答えと同じかチェック
       function checkAnswerList(list, ansList) {
@@ -150,18 +193,16 @@
         const countCheck = function (list, some) {
           let count = 0;
           for (let i = 0; i < list.length; i++) {
-            // console.log("check " + list[i] + " " + some);
+            console.log("check " + list[i] + " " + some);
             if (list[i][0] == some[0] && list[i][1] == some[1]) count++;
           }
           return count;
         };
 
-        console.log(ansList);
-        console.log(list);
-        for (let i = 0; i < list.length; i++) {
-          // const a = countCheck(ansList, list[i]);
+        for (let i = 0; i < ansList.length; i++) {
+          const a = countCheck(list, ansList[i]);
           // console.log("a " + a);
-          if (countCheck(ansList, list[i]) != 1) return false;
+          if (countCheck(list, ansList[i]) != 1) return false;
         }
 
         return true;
