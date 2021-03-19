@@ -3,59 +3,188 @@
   <head>
     <title>Parcel Sandbox</title>
     <meta charset="UTF-8" />
+    <script>
+      //エンターキーでフォーカスを変える
+      function keydown(e) {
+        if (e.keyCode === 13) {
+          var obj = document.activeElement;
+          obj.nextElementSibling.focus();
+        }
+      }
+      window.onkeydown = keydown;
+    </script>
   </head>
 
   <body>
-    <p>
-      目黒株式会社は、設立にあたって発行株式総数1,000株のうち300株を1株あたり4,000円で発行することとし、全株について引受け・払い込みを受け、払込金については普通預金に入金した。なお、資本金は会社法で認められている最低限度額を計上することとした。また、発起人が株式発行に係る諸経費50,000円を立て替え払いしていたことが判明したので、現金で精算した。
-    </p>
+    <!-- 問題文 -->
+    <p id="question"></p>
     <form action="#" id="answer">
       <p>
         <select id="dr-ac-1"></select>
-        <input type="text" name="name" />
+        <input
+          type="text"
+          id="dr-amt-1"
+          onfocus="offComma(this);"
+          onblur="toComma(this);"
+        />
         <select id="cr-ac-1"></select>
-        <input type="text" name="name" />
+        <input
+          type="text"
+          id="cr-amt-1"
+          onfocus="offComma(this);"
+          onblur="toComma(this);"
+        />
       </p>
       <p>
         <select id="dr-ac-2"></select>
-        <input type="text" name="name" />
+        <input
+          type="text"
+          id="dr-amt-2"
+          onfocus="offComma(this);"
+          onblur="toComma(this);"
+        />
         <select id="cr-ac-2"></select>
-        <input type="text" name="name" />
+        <input
+          type="text"
+          id="cr-amt-2"
+          onfocus="offComma(this);"
+          onblur="toComma(this);"
+        />
       </p>
       <p>
         <select id="dr-ac-3"></select>
-        <input type="text" name="name" />
+        <input
+          type="text"
+          id="dr-amt-3"
+          onfocus="offComma(this);"
+          onblur="toComma(this);"
+        />
         <select id="cr-ac-3"></select>
-        <input type="text" name="name" />
+        <input
+          type="text"
+          id="cr-amt-3"
+          onfocus="offComma(this);"
+          onblur="toComma(this);"
+        />
       </p>
       <p><input type="submit" value="確認する" id="button2" /></p>
     </form>
     <script>
-      const accountsList = [
-        "現金",
-        "普通預金",
-        "資本金",
-        "資本準備金",
-        "利益準備金",
-        "創立費",
-        "株式交付費",
+      // 問題のリスト
+      const questionsList = [
+        {
+          // 問題文
+          q:
+            "目黒株式会社は、設立にあたって発行株式総数1,000株のうち300株を1株あたり4,000円で発行することとし、全株について引受け・払い込みを受け、払込金については普通預金に入金した。なお、資本金は会社法で認められている最低限度額を計上することとした。また、発起人が株式発行に係る諸経費50,000円を立て替え払いしていたことが判明したので、現金で精算した。",
+          // 答え-借方
+          dr: [
+            ["普通預金", "1,200,000"],
+            ["創立費", "50,000"],
+          ],
+          // 答え-貸方
+          cr: [
+            ["資本金", "600,000"],
+            ["資本準備金", "600,000"],
+            ["現金", "50,000"],
+          ],
+          // 選択する勘定科目
+          actList: [
+            "現金",
+            "普通預金",
+            "資本金",
+            "資本準備金",
+            "利益準備金",
+            "創立費",
+            "株式交付費",
+          ],
+        },
       ];
 
-      // 勘定科目選択をセット
-      setAccounts("dr-ac-1", accountsList);
-      setAccounts("cr-ac-1", accountsList);
-      setAccounts("dr-ac-2", accountsList);
-      setAccounts("cr-ac-2", accountsList);
-      setAccounts("dr-ac-3", accountsList);
-      setAccounts("cr-ac-3", accountsList);
+      let currentQuestion = questionsList[0];
+
+      setCurrentQuestion(currentQuestion);
+
+      // 問題を表示
+      function setCurrentQuestion(current) {
+        // 問題文を表示
+        document.getElementById("question").innerHTML = current.q;
+        // 勘定科目選択をセット
+        setAccounts("dr-ac-1", current.actList);
+        setAccounts("cr-ac-1", current.actList);
+        setAccounts("dr-ac-2", current.actList);
+        setAccounts("cr-ac-2", current.actList);
+        setAccounts("dr-ac-3", current.actList);
+        setAccounts("cr-ac-3", current.actList);
+      }
 
       /**
        * アンサーチェック
        */
       document.getElementById("answer").onsubmit = function () {
-        console.log("dr-ac-1 is " + document.getElementById("dr-ac-1").value);
-        console.log("cr-ac-1 is " + document.getElementById("cr-ac-1").value);
+        let correct = true;
+        const drList = getAnswerList("dr");
+        correct = checkAnswerList(drList, currentQuestion.dr);
+        // console.log("testcorrect " + testcorrect);
+        const crList = getAnswerList("cr");
+        correct = checkAnswerList(crList, currentQuestion.cr);
+        // const drAnsList = currentQuestion.dr;
+        // const crAnsList = currentQuestion.cr;
+        // console.log(drAnsList);
+        // console.log("drList.length " + drList.length);
+        // console.log("drAnsList.length " + drAnsList.length);
+        // console.log(crAnsList);
+
+        if (correct) {
+          console.log("正解");
+        } else {
+          console.log("不正解");
+        }
       };
+
+      // 貸方または借方の答えリストが答えと同じかチェック
+      function checkAnswerList(list, ansList) {
+        console.log(
+          "lengthCheck 入力" + list.length + " 正解" + ansList.length
+        );
+        if (list.length != ansList.length) return false;
+        const countCheck = function (list, some) {
+          let count = 0;
+          for (let i = 0; i < list.length; i++) {
+            // console.log("check " + list[i] + " " + some);
+            if (list[i][0] == some[0] && list[i][1] == some[1]) count++;
+          }
+          return count;
+        };
+
+        console.log(ansList);
+        console.log(list);
+        for (let i = 0; i < list.length; i++) {
+          // const a = countCheck(ansList, list[i]);
+          // console.log("a " + a);
+          if (countCheck(ansList, list[i]) != 1) return false;
+        }
+
+        return true;
+      }
+
+      // 貸方または借方の答えリストを返す
+      function getAnswerList(drOrCr) {
+        console.log(drOrCr);
+        const list = [];
+        for (let i = 1; i <= 3; i++) {
+          if (
+            document.getElementById(drOrCr + "-ac-" + i).value != "" &&
+            document.getElementById(drOrCr + "-amt-" + i).value != ""
+          ) {
+            list.push([
+              document.getElementById(drOrCr + "-ac-" + i).value,
+              document.getElementById(drOrCr + "-amt-" + i).value,
+            ]);
+          }
+        }
+        console.log(list);
+        return list;
+      }
 
       /**
        * セレクトボックスの中身を設定
@@ -69,6 +198,23 @@
           option.setAttribute("value", accountName);
           option.innerHTML = accountName;
           document.getElementById(name).appendChild(option);
+        }
+      }
+
+      // テキストボックスのフォーカスを外すとカンマを挿入
+      function toComma(obj) {
+        if (obj.value.trim().length != 0 && !isNaN(obj.value)) {
+          obj.value = Number(obj.value).toLocaleString();
+        }
+      }
+
+      // テキストボックスのフォーカスするとカンマを外す
+      function offComma(obj) {
+        var reg = new RegExp(",", "g");
+        var chgVal = obj.value.replace(reg, "");
+        if (!isNaN(chgVal)) {
+          obj.value = chgVal; //値セット
+          obj.select(); //全選択
         }
       }
     </script>
