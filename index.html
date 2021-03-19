@@ -144,6 +144,15 @@
         form="answer"
       />
     </p>
+    <p>
+      <input
+        type="button"
+        value="他の問題"
+        onClick="nextQuestion();"
+        form="answer"
+        style="display: block; margin: 0 0 0 auto"
+      />
+    </p>
 
     <script>
       // 問題のリスト
@@ -174,9 +183,25 @@
             "株式交付費",
           ],
         },
+        {
+          q:
+            "商品80,000円をクレジット払いの条件で販売した。なお、信販会社への手数料(販売代金の3%)は販売時に計上する。",
+          dr: [
+            ["支払手数料", "2,400"],
+            ["クレジット売掛金", "77,600"],
+          ],
+          cr: [["売上", "80,000"]],
+          actList: [
+            "現金",
+            "クレジット売掛金",
+            "売上",
+            "受取利息",
+            "支払手数料",
+          ],
+        },
       ];
 
-      let currentQuestion = questionsList[0];
+      let currentQuestion = questionsList[1];
 
       setCurrentQuestion(currentQuestion);
 
@@ -208,10 +233,32 @@
 
         if (correct) {
           console.log("正解");
+          nextQuestion();
         } else {
           console.log("不正解");
           viewAnswer();
         }
+      }
+
+      function nextQuestion() {
+        // 入力クリア
+        removeChildren("dr-ac-1");
+        removeChildren("cr-ac-1");
+        removeChildren("dr-ac-2");
+        removeChildren("cr-ac-2");
+        removeChildren("dr-ac-3");
+        removeChildren("cr-ac-3");
+        document.getElementById("dr-amt-1").value = "";
+        document.getElementById("cr-amt-1").value = "";
+        document.getElementById("dr-amt-2").value = "";
+        document.getElementById("cr-amt-2").value = "";
+        document.getElementById("dr-amt-3").value = "";
+        document.getElementById("cr-amt-3").value = "";
+
+        const next = Math.floor(Math.random() * questionsList.length);
+        console.log(next);
+        currentQuestion = questionsList[next];
+        setCurrentQuestion(currentQuestion);
       }
 
       function viewAnswer() {
@@ -292,6 +339,14 @@
           option.setAttribute("value", accountName);
           option.innerHTML = accountName;
           document.getElementById(name).appendChild(option);
+        }
+      }
+
+      function removeChildren(x) {
+        var select = document.getElementById(x);
+        const length = select.options.length;
+        for (i = length - 1; i >= 0; i--) {
+          select.options[i] = null;
         }
       }
 
