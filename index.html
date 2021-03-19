@@ -41,57 +41,110 @@
       </tr>
     </table>
 
-    <form action="#" id="answer" autocomplete="off" onsubmit="return false;">
-      <p>
-        <select id="dr-ac-1"></select>
-        <input
-          type="text"
-          id="dr-amt-1"
-          onfocus="offComma(this);"
-          onblur="toComma(this);"
-        />
-        <select id="cr-ac-1"></select>
-        <input
-          type="text"
-          id="cr-amt-1"
-          onfocus="offComma(this);"
-          onblur="toComma(this);"
-        />
-      </p>
-      <p>
-        <select id="dr-ac-2"></select>
-        <input
-          type="text"
-          id="dr-amt-2"
-          onfocus="offComma(this);"
-          onblur="toComma(this);"
-        />
-        <select id="cr-ac-2"></select>
-        <input
-          type="text"
-          id="cr-amt-2"
-          onfocus="offComma(this);"
-          onblur="toComma(this);"
-        />
-      </p>
-      <p>
-        <select id="dr-ac-3"></select>
-        <input
-          type="text"
-          id="dr-amt-3"
-          onfocus="offComma(this);"
-          onblur="toComma(this);"
-        />
-        <select id="cr-ac-3"></select>
-        <input
-          type="text"
-          id="cr-amt-3"
-          onfocus="offComma(this);"
-          onblur="toComma(this);"
-        />
-      </p>
-      <p><input type="button" value="確認する" onClick="ansButton();" /></p>
-    </form>
+    <form
+      action="#"
+      id="answer"
+      autocomplete="off"
+      onsubmit="return false;"
+    ></form>
+    <table border="1" width="100%" style="table-layout: fixed">
+      <tr>
+        <th bgcolor="#00EE00"><font color="#FFFFFF">借方勘定項目</font></th>
+        <th bgcolor="#00EE00"><font color="#FFFFFF">金額</font></th>
+        <th bgcolor="#00EE00"><font color="#FFFFFF">貸方勘定項目</font></th>
+        <th bgcolor="#00EE00"><font color="#FFFFFF">金額</font></th>
+      </tr>
+      <tr>
+        <th>
+          <select id="dr-ac-1" form="answer" style="width: 96%"></select>
+        </th>
+        <th>
+          <input
+            type="text"
+            id="dr-amt-1"
+            onfocus="offComma(this);"
+            onblur="toComma(this);"
+            form="answer"
+            style="width: 96%"
+          />
+        </th>
+        <th>
+          <select id="cr-ac-1" form="answer" style="width: 96%"></select>
+        </th>
+        <th>
+          <input
+            type="text"
+            id="cr-amt-1"
+            onfocus="offComma(this);"
+            onblur="toComma(this);"
+            form="answer"
+            style="width: 96%"
+          />
+        </th>
+      </tr>
+      <tr>
+        <th><select id="dr-ac-2" form="answer" style="width: 96%"></select></th>
+        <th>
+          <input
+            type="text"
+            id="dr-amt-2"
+            onfocus="offComma(this);"
+            onblur="toComma(this);"
+            form="answer"
+            style="width: 96%"
+          />
+        </th>
+        <th>
+          <select id="cr-ac-2" form="answer" style="width: 96%"></select>
+        </th>
+        <th>
+          <input
+            type="text"
+            id="cr-amt-2"
+            onfocus="offComma(this);"
+            onblur="toComma(this);"
+            form="answer"
+            style="width: 96%"
+          />
+        </th>
+      </tr>
+      <tr>
+        <th><select id="dr-ac-3" form="answer" style="width: 96%"></select></th>
+        <th>
+          <input
+            type="text"
+            id="dr-amt-3"
+            onfocus="offComma(this);"
+            onblur="toComma(this);"
+            form="answer"
+            style="width: 96%"
+          />
+        </th>
+        <th>
+          <select id="cr-ac-3" form="answer" style="width: 96%"></select>
+        </th>
+        <th>
+          <input
+            type="text"
+            id="cr-amt-3"
+            onfocus="offComma(this);"
+            onblur="toComma(this);"
+            form="answer"
+            style="width: 96%"
+          />
+        </th>
+      </tr>
+    </table>
+
+    <p>
+      <input
+        type="button"
+        value="確認する"
+        onClick="ansButton();"
+        form="answer"
+      />
+    </p>
+
     <script>
       // 問題のリスト
       const questionsList = [
