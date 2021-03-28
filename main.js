@@ -179,8 +179,6 @@ function getAnswerList(drOrCr) {
 
 /**
  * セレクトボックスの中身を設定
- * name = id , accountsList = 勘定科目のリスト
- * @param {number} duration スクロール時間のミリ秒です。
  */
 function setAccounts(name, accountsList) {
   for (let i = -1; i < accountsList.length; i++) {
